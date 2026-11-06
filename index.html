@@ -16,19 +16,22 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
-/* Layout: painel escuro de "sala de controle" — grade fina, rótulos em mono, telas dos projetos como monitores; operários (cursores) circulam pelas peças. */
+/* Layout: a página é lida como uma lâmina ao microscópio. Abertura = campo da ocular (4×); cada seção é um aumento maior até o contato (100×).
+   Projetos são "casos" com protocolo, queixa, conduta e evolução. Setas de anotação de fotomicrografia apontam o que importa. */
 :root{
-  --noite:#0B1424;      /* fundo */
-  --navy:#0F1A2C;       /* faixas */
-  --painel:#142238;     /* cartões */
-  --linha:#22324D;      /* bordas e grade */
-  --mint:#2BC4AC;       /* destaque da marca ("Dev") */
-  --teal:#10897A;       /* barra do selo */
+  --noite:#0B1424;
+  --navy:#0F1A2C;
+  --painel:#132137;
+  --linha:#22324D;
+  --mint:#2BC4AC;
+  --teal:#10897A;
   --mint-fundo:rgba(43,196,172,.12);
   --branco:#F3F6FA;
   --suave:#A9B6C9;
-  --apagado:#6F7F98;
-  --ambar:#FFC45C;      /* status "em desenvolvimento" */
+  --apagado:#73839C;
+  --ambar:#FFC45C;
+  --azul:#8FB8FF;
+  --eosina:#E7A3C8;     /* rosa da eosina, só em detalhes */
   --f-titulo:"Space Grotesk",system-ui,sans-serif;
   --f-texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
@@ -37,20 +40,20 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:84px}
-body{background:var(--noite);color:var(--branco);font:400 16px/1.65 var(--f-texto);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{position:relative;background:var(--noite);color:var(--branco);font:400 16px/1.65 var(--f-texto);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--noite)}
-h1,h2,h3{font-family:var(--f-titulo);margin:0;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
+h1,h2,h3,h4{font-family:var(--f-titulo);margin:0;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
 p{margin:0}
 a{color:inherit}
 img{display:block;max-width:100%;height:auto}
 :focus-visible{outline:2px solid var(--mint);outline-offset:3px;border-radius:6px}
 .wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.mono{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.06em}
-.olho{font-family:var(--f-mono);font-size:12.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--mint)}
-.olho::before{content:"// ";color:var(--apagado)}
+.mono{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.04em}
+.olho{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:12.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--mint)}
+.olho .aum{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:24px;padding:0 8px;border-radius:999px;border:1px solid rgba(43,196,172,.45);letter-spacing:.02em}
 
 /* topo */
-.topo{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(11,20,36,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--linha)}
+.topo{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(11,20,36,.84);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--linha)}
 .topo .wrap{display:flex;align-items:center;gap:24px;padding-block:12px}
 .marca{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-titulo);font-weight:700;font-size:21px;letter-spacing:-.02em}
 .marca b{color:var(--mint);font-weight:700}
@@ -65,39 +68,47 @@ img{display:block;max-width:100%;height:auto}
 .botao--cheio:hover{background:#45D6BF}
 @media (max-width:760px){.menu{display:none}.topo .botao{margin-left:auto}}
 
-/* abertura */
+/* abertura: o campo da ocular */
 .abertura{position:relative;overflow:hidden;border-bottom:1px solid var(--linha)}
-.abertura::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(#000 55%,transparent)}
-.abertura::after{content:"";position:absolute;width:760px;height:760px;right:-220px;top:-260px;background:radial-gradient(circle,rgba(43,196,172,.22),transparent 62%);pointer-events:none}
-.gigante{position:absolute;left:50%;top:18px;transform:translateX(-50%);font:700 clamp(84px,17vw,250px)/.9 var(--f-titulo);letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1.5px rgba(43,196,172,.28);white-space:nowrap;pointer-events:none;user-select:none}
-.gigante span{display:inline-block;animation:sobe .9s cubic-bezier(.2,.8,.2,1) both}
-@keyframes sobe{from{transform:translateY(40%);opacity:.2}to{transform:none;opacity:1}}
-.abertura .wrap{position:relative;z-index:1}
-.abertura .heroi{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;padding-block:clamp(120px,14vw,190px) 72px}
-.abertura h1{font-size:clamp(42px,6.2vw,84px);margin-top:18px}
+.abertura::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(#000 50%,transparent)}
+.heroi{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding-block:52px 56px}
+.heroi > *{min-width:0}
+.abertura h1{font-size:clamp(40px,5.4vw,72px);margin-top:18px}
 .abertura h1 em{font-style:normal;color:var(--mint);display:block}
-.abertura .lead{margin-top:22px;font-size:clamp(17px,1.6vw,19.5px);color:var(--suave);max-width:36em}
-.abertura .lead b{color:var(--branco);font-weight:600}
-.acoes{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-.foto{position:relative;justify-self:end;width:min(100%,400px)}
-.foto img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 30%;border-radius:var(--raio);filter:saturate(.92) contrast(1.03)}
-.foto::before,.foto::after{content:"";position:absolute;width:42px;height:42px;border:2px solid var(--mint);pointer-events:none}
-.foto::before{left:-12px;top:-12px;border-right:0;border-bottom:0;border-top-left-radius:10px}
-.foto::after{right:-12px;bottom:-12px;border-left:0;border-top:0;border-bottom-right-radius:10px}
-.foto .etiqueta{position:absolute;left:14px;bottom:14px;right:14px;display:flex;justify-content:space-between;gap:10px;align-items:center;background:rgba(11,20,36,.86);backdrop-filter:blur(6px);border:1px solid var(--linha);border-radius:10px;padding:10px 12px}
-.foto .etiqueta b{display:block;font:600 15px/1.2 var(--f-titulo)}
-.foto .etiqueta span{color:var(--suave);font-size:13px}
+.lead{margin-top:22px;font-size:clamp(17px,1.6vw,19.5px);color:var(--suave);max-width:34em}
+.lead b{color:var(--branco);font-weight:600}
+.acoes{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.autor{display:inline-flex;align-items:center;gap:12px;margin-top:26px;padding:8px 16px 8px 8px;border:1px solid var(--linha);border-radius:999px;max-width:100%;background:rgba(19,33,55,.6)}
+.autor > div{min-width:0}
+.autor img{width:44px;height:44px;border-radius:50%;object-fit:cover;object-position:50% 28%}
+.autor b{display:block;font:600 15px/1.2 var(--f-titulo)}
+.autor span{display:block;color:var(--suave);font-size:13px;line-height:1.3}
 .ponto{display:inline-flex;align-items:center;gap:7px;color:var(--mint);white-space:nowrap}
-.ponto::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 0 0 currentColor;animation:pulso 2s infinite}
+.ponto::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;animation:pulso 2s infinite}
 @keyframes pulso{0%{box-shadow:0 0 0 0 rgba(43,196,172,.6)}80%,100%{box-shadow:0 0 0 9px rgba(43,196,172,0)}}
+
+.ocular{position:relative;justify-self:center;width:min(100%,440px);display:flex;flex-direction:column;align-items:center;gap:16px}
+.campo{position:relative;width:100%;aspect-ratio:1;border-radius:50%;overflow:hidden;background:#000;box-shadow:0 0 0 10px #0E1828,0 0 0 11px var(--linha),0 40px 90px rgba(0,0,0,.6)}
+.campo img{position:absolute;inset:-12%;width:124%;height:124%;max-width:none;object-fit:cover;animation:platina 26s ease-in-out infinite alternate;transform-origin:50% 50%}
+@keyframes platina{0%{transform:translate(-3%,-2%) scale(1.02)}50%{transform:translate(3%,1%) scale(1.06)}100%{transform:translate(-1%,3%) scale(1.03)}}
+.campo::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,transparent 58%,rgba(0,0,0,.55) 74%,#000 86%);pointer-events:none}
+.campo svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.etiqueta-lamina{display:flex;align-items:stretch;width:100%;border-radius:8px;overflow:hidden;border:1px solid var(--linha);background:var(--painel)}
+.etiqueta-lamina .fosco{flex:0 0 38%;padding:10px 12px;background:repeating-linear-gradient(135deg,#E9EDF2 0 6px,#DDE3EA 6px 12px);color:#0F1A2C}
+.etiqueta-lamina .fosco b{display:block;font:700 15px/1.1 var(--f-titulo)}
+.etiqueta-lamina .fosco span{display:block;font:500 11px/1.4 var(--f-mono);color:#33415A}
+.etiqueta-lamina .legenda{flex:1;padding:10px 14px;min-width:0}
+.etiqueta-lamina .legenda b{display:block;font:500 13px/1.35 var(--f-texto);color:var(--branco)}
+.etiqueta-lamina .legenda span{display:block;font:400 11.5px/1.5 var(--f-mono);color:var(--apagado)}
+
 .numeros{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--linha)}
 .numeros > div{padding:22px 20px;border-right:1px solid var(--linha);min-width:0}
 .numeros > div:last-child{border-right:0}
 .numeros b{display:block;font:700 clamp(28px,3.2vw,40px)/1 var(--f-titulo);font-variant-numeric:tabular-nums}
 .numeros span{display:block;margin-top:6px;color:var(--suave);font-size:14px;line-height:1.4}
 @media (max-width:900px){
-  .abertura .heroi{grid-template-columns:1fr;gap:44px;padding-block:110px 48px}
-  .foto{justify-self:start;width:min(100%,340px)}
+  .heroi{grid-template-columns:1fr;gap:44px;padding-block:48px 48px}
+  .ocular{width:min(100%,400px)}
   .numeros{grid-template-columns:1fr 1fr}
   .numeros > div:nth-child(2){border-right:0}
   .numeros > div:nth-child(-n+2){border-bottom:1px solid var(--linha)}
@@ -110,26 +121,25 @@ section{padding-block:96px}
 .cabeca p{color:var(--suave);font-size:18px;max-width:40em}
 
 /* sobre */
-.sobre .grade2{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
-.sobre .texto{display:flex;flex-direction:column;gap:18px;color:var(--suave);font-size:17.5px}
+.sobre .grade2{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px;align-items:center}
+.retrato{position:relative;margin:0}
+.retrato img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 30%;border-radius:var(--raio)}
+.retrato figcaption{margin-top:12px;display:flex;justify-content:space-between;gap:12px;color:var(--apagado)}
+.sobre .texto{display:flex;flex-direction:column;gap:18px;color:var(--suave);font-size:17.5px;margin-top:20px}
 .sobre .texto b{color:var(--branco);font-weight:600}
-.codigo{background:var(--navy);border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;min-width:0}
-.codigo .barra{display:flex;align-items:center;gap:7px;padding:12px 16px;border-bottom:1px solid var(--linha);color:var(--apagado)}
-.codigo .barra i{width:10px;height:10px;border-radius:50%;background:var(--linha)}
-.codigo .barra span{margin-left:8px}
-.codigo pre{margin:0;padding:20px 20px 22px;font:400 14px/1.75 var(--f-mono);color:var(--suave);overflow-x:auto;white-space:pre}
-.codigo .k{color:#8FB8FF}.codigo .s{color:var(--mint)}.codigo .c{color:var(--apagado)}.codigo .p{color:var(--branco)}
-.cursor-txt{display:inline-block;width:8px;height:16px;background:var(--mint);vertical-align:-2px;animation:pisca 1s steps(1) infinite}
-@keyframes pisca{50%{opacity:0}}
-@media (max-width:900px){.sobre .grade2{grid-template-columns:1fr}}
+.ficha{display:grid;grid-template-columns:auto 1fr;gap:10px 22px;margin-top:28px;padding:22px 24px;border:1px solid var(--linha);border-radius:var(--raio);background:var(--navy)}
+.ficha dt{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--apagado);padding-top:3px}
+.ficha dd{margin:0;color:var(--branco)}
+@media (max-width:900px){.sobre .grade2{grid-template-columns:1fr;gap:36px}.retrato{max-width:380px}}
+@media (max-width:520px){.ficha{grid-template-columns:1fr;gap:2px}.ficha dd{margin-bottom:10px}}
 
-/* projetos */
-.grupo{display:flex;align-items:baseline;gap:16px;margin:64px 0 24px;padding-bottom:14px;border-bottom:1px solid var(--linha)}
+/* casos (projetos) */
+.grupo{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 16px;margin:72px 0 24px;padding-bottom:14px;border-bottom:1px solid var(--linha)}
 .cabeca + .grupo{margin-top:0}
 .grupo h3{font-size:26px}
 .grupo span{color:var(--apagado)}
-.destaque{display:grid;grid-template-columns:1.25fr 1fr;gap:44px;align-items:center;margin-bottom:28px}
-.destaque.inverte .midia{order:2}
+.caso{display:grid;grid-template-columns:1.25fr 1fr;gap:44px;align-items:center;margin-bottom:32px}
+.caso.inverte .midia{order:2}
 .midia{position:relative;min-width:0;padding:0 34px 30px 0}
 .tela{position:relative;margin:0;border-radius:12px;overflow:hidden;border:1px solid var(--linha);background:var(--navy);box-shadow:0 30px 70px rgba(0,0,0,.45)}
 .tela .barra{display:flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-bottom:1px solid var(--linha);background:#101C30}
@@ -138,26 +148,29 @@ section{padding-block:96px}
 .tela img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top}
 .tela.cel{position:absolute;right:0;bottom:0;width:27%;border-radius:18px;border:4px solid #1E2C45}
 .tela.cel img{aspect-ratio:9/19.5}
-.varredura::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(43,196,172,.16) 48%,rgba(43,196,172,.32) 50%,transparent 52%);transform:translateY(-100%);pointer-events:none}
-.varredura.ativa::after{animation:varre 1.6s ease-out 1}
-@keyframes varre{to{transform:translateY(100%)}}
 .info{display:flex;flex-direction:column;gap:16px;min-width:0}
-.status{align-self:flex-start;font-family:var(--f-mono);font-size:12px;font-weight:500;letter-spacing:.06em;padding:5px 10px;border-radius:999px;background:var(--mint-fundo);color:var(--mint)}
+.protocolo{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.protocolo b{font:700 13px/1 var(--f-mono);letter-spacing:.06em;color:var(--branco);border:1px solid var(--linha);border-radius:6px;padding:6px 9px;background:var(--navy)}
+.status{font-family:var(--f-mono);font-size:12px;font-weight:500;letter-spacing:.04em;padding:5px 10px;border-radius:999px;background:var(--mint-fundo);color:var(--mint)}
 .status--dev{background:rgba(255,196,92,.12);color:var(--ambar)}
-.status--interno{background:rgba(143,184,255,.12);color:#8FB8FF}
-.info h4{font:700 clamp(26px,2.8vw,34px)/1.1 var(--f-titulo);letter-spacing:-.02em;margin:0;text-wrap:balance}
-.info > p{color:var(--suave);font-size:17px}
-.itens{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-.itens li{position:relative;padding-left:22px;color:var(--suave)}
-.itens li b{color:var(--branco);font-weight:600}
-.itens li::before{content:"›";position:absolute;left:4px;top:-1px;color:var(--mint);font-weight:700}
+.status--interno{background:rgba(143,184,255,.12);color:var(--azul)}
+.info h4{font-size:clamp(26px,2.8vw,34px);line-height:1.1}
+.laudo{display:flex;flex-direction:column;border:1px solid var(--linha);border-radius:12px;overflow:hidden}
+.laudo > div{display:grid;grid-template-columns:110px 1fr;gap:16px;padding:13px 16px;border-bottom:1px solid var(--linha)}
+.laudo > div:last-child{border-bottom:0;background:rgba(43,196,172,.06)}
+.laudo dt{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--apagado);padding-top:3px}
+.laudo dd{margin:0;color:var(--suave);font-size:15.5px;line-height:1.55}
+.laudo dd b{color:var(--branco);font-weight:600}
+.laudo > div:last-child dt{color:var(--mint)}
+.laudo > div:last-child dd{color:var(--branco)}
+@media (max-width:520px){.laudo > div{grid-template-columns:1fr;gap:4px}}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chips span{font-family:var(--f-mono);font-size:12px;color:var(--suave);border:1px solid var(--linha);border-radius:6px;padding:4px 9px}
 .link{align-self:flex-start;color:var(--mint);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(43,196,172,.4);padding-bottom:2px}
 .link:hover{border-color:var(--mint)}
 @media (max-width:900px){
-  .destaque{grid-template-columns:1fr;gap:28px}
-  .destaque.inverte .midia{order:0}
+  .caso{grid-template-columns:1fr;gap:28px}
+  .caso.inverte .midia{order:0}
   .midia{padding:0 22px 26px 0}
 }
 .cartoes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
@@ -166,15 +179,41 @@ section{padding-block:96px}
 .cartao .capa{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--navy);border-bottom:1px solid var(--linha)}
 .cartao .capa img{width:100%;height:100%;object-fit:cover;object-position:top}
 .cartao .capa.dupla{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 16px 0;background:linear-gradient(160deg,#16253D,#0E1829)}
-.cartao .capa.dupla img{border-radius:12px 12px 0 0;height:auto;aspect-ratio:auto;border:1px solid var(--linha);border-bottom:0}
-.cartao .corpo{display:flex;flex-direction:column;gap:12px;padding:22px 22px 24px;flex:1}
-.cartao h4{font:700 22px/1.15 var(--f-titulo);margin:0;letter-spacing:-.01em}
+.cartao .capa.dupla img{border-radius:12px 12px 0 0;height:auto;border:1px solid var(--linha);border-bottom:0}
+.cartao .corpo{display:flex;flex-direction:column;gap:12px;padding:20px 22px 24px;flex:1}
+.cartao h4{font-size:22px;line-height:1.15;letter-spacing:-.01em}
 .cartao p{color:var(--suave);font-size:15.5px}
 .cartao .link{margin-top:auto}
-.cartao .vazio{display:flex;align-items:center;justify-content:center;height:100%;padding:24px;text-align:center;color:var(--apagado);font-family:var(--f-mono);font-size:13px;line-height:1.7;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:22px 22px}
-.cartao .vazio b{display:block;color:var(--ambar);font-weight:500}
+.cartao .fila{display:flex;flex-direction:column;justify-content:center;gap:8px;height:100%;padding:18px 20px;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:22px 22px}
+.cartao .fila div{display:flex;align-items:center;gap:10px;font:500 12px/1 var(--f-mono);color:var(--suave);background:var(--navy);border:1px solid var(--linha);border-radius:8px;padding:9px 10px}
+.cartao .fila div::before{content:"PDF";font-size:10px;color:#062420;background:var(--eosina);border-radius:4px;padding:3px 5px}
+.cartao .fila div::after{content:"lido ✓";margin-left:auto;color:var(--mint)}
+.cartao .fila div.lendo::after{content:"lendo…";color:var(--ambar)}
 @media (max-width:980px){.cartoes{grid-template-columns:1fr 1fr}}
 @media (max-width:640px){.cartoes{grid-template-columns:1fr}}
+
+/* foco: a imagem entra em foco como no micrométrico (só depois que o script roda) */
+.foco img{transition:filter .9s ease,transform .9s ease}
+.foco.desfocado img{filter:blur(7px) saturate(.6);transform:scale(1.015)}
+
+
+/* microfotografia: as fotos dos campos se juntam no panorama */
+.mosaico{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:0;aspect-ratio:16/10;background:#0A1220;transition:gap .6s ease}
+.mosaico i{display:block;background-image:url("img/lamina-3.jpg");background-size:600% 400%;transition:transform .7s cubic-bezier(.2,.8,.2,1),opacity .5s;outline:1px solid rgba(11,20,36,.0)}
+.mosaico.solto{gap:5px}
+.mosaico.solto i{transform:translate(var(--sx),var(--sy)) scale(.92);opacity:.55;outline-color:rgba(43,196,172,.5)}
+.mosaico .progresso{position:absolute;left:12px;bottom:12px;font:500 11.5px/1 var(--f-mono);color:var(--branco);background:rgba(11,20,36,.82);border:1px solid var(--linha);border-radius:6px;padding:7px 9px}
+.mosaico .medida{position:absolute;right:14px;top:16px;display:flex;align-items:center;gap:8px;font:500 11px/1 var(--f-mono);color:#0F1A2C;background:rgba(243,246,250,.9);border-radius:6px;padding:6px 8px}
+.mosaico .medida::before{content:"";width:56px;height:3px;background:#0F1A2C;border-left:2px solid #0F1A2C;border-right:2px solid #0F1A2C;box-shadow:inset 0 0 0 1px #F3F6FA}
+
+.tela img.natural{aspect-ratio:auto;object-fit:contain}
+.midia--micro{padding:0 0 64px 0}
+.tela.mini{position:absolute;left:-8px;bottom:0;width:46%;border-radius:12px;box-shadow:0 24px 60px rgba(0,0,0,.6);border-color:#2A3D5E}
+.tela.mini .mosaico{aspect-ratio:16/10}
+.tela.mini .medida{top:10px;right:10px;font-size:10px;padding:4px 6px}
+.tela.mini .medida::before{width:34px}
+.tela.mini .progresso{left:8px;bottom:8px;font-size:10.5px;padding:5px 7px}
+@media (max-width:900px){.tela.mini{left:0;width:56%}.midia--micro{padding-bottom:56px}}
 
 /* serviços */
 .servicos{background:var(--navy);border-block:1px solid var(--linha)}
@@ -184,7 +223,7 @@ section{padding-block:96px}
 .matriz > div:nth-last-child(-n+3){border-bottom:0}
 .matriz > div:hover{background:rgba(43,196,172,.05)}
 .matriz .rot{color:var(--apagado)}
-.matriz h4{font:700 21px/1.2 var(--f-titulo);margin:0}
+.matriz h4{font-size:21px;line-height:1.2;letter-spacing:-.01em}
 .matriz p{color:var(--suave);font-size:15.5px}
 .matriz .preco{margin-top:auto;padding-top:6px;font-family:var(--f-mono);font-size:13px;color:var(--mint)}
 @media (max-width:900px){
@@ -200,48 +239,61 @@ section{padding-block:96px}
 }
 .jeito{display:grid;grid-template-columns:repeat(3,1fr);gap:32px 40px;margin-top:64px}
 .jeito div{display:flex;flex-direction:column;gap:8px;min-width:0}
-.jeito h4{font:600 18px/1.3 var(--f-titulo);margin:0;display:flex;align-items:center;gap:10px}
+.jeito h4{font-size:18px;line-height:1.3;font-weight:600;display:flex;align-items:center;gap:10px;letter-spacing:-.01em}
 .jeito h4::before{content:"";width:18px;height:2px;background:var(--mint)}
 .jeito p{color:var(--suave);font-size:15.5px}
 @media (max-width:900px){.jeito{grid-template-columns:1fr 1fr}}
 @media (max-width:600px){.jeito{grid-template-columns:1fr}}
 
-/* contato */
+/* contato: requisição */
 .contato{position:relative;overflow:hidden;text-align:center}
-.contato::before{content:"";position:absolute;left:50%;top:50%;width:900px;height:900px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(43,196,172,.16),transparent 60%);pointer-events:none}
-.contato .wrap{position:relative;display:flex;flex-direction:column;align-items:center;gap:22px}
+.contato .fundo{position:absolute;inset:0;background:url("img/lamina-fundo.jpg") center/cover;opacity:.16;filter:saturate(.8)}
+.contato::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(11,20,36,.35),var(--noite) 72%);pointer-events:none}
+.contato .wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:22px}
 .contato h2{font-size:clamp(36px,5.6vw,72px);max-width:13em}
 .contato h2 em{font-style:normal;color:var(--mint)}
-.contato > .wrap > p{color:var(--suave);font-size:18px;max-width:34em}
+.contato .wrap > p{color:var(--suave);font-size:18px;max-width:34em}
 .canais{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:10px}
 .canal{display:flex;align-items:center;gap:14px;background:var(--painel);border:1px solid var(--linha);border-radius:var(--raio);padding:14px 14px 14px 18px;text-align:left;min-width:0}
 .canal small{display:block;color:var(--apagado);font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase}
 .canal b{display:block;font:600 17px/1.3 var(--f-titulo);user-select:all;word-break:break-all}
 .copiar{min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--linha);background:transparent;color:var(--suave);font:500 13px/1 var(--f-mono);cursor:pointer}
 .copiar:hover{border-color:var(--mint);color:var(--branco)}
-.rodape{border-top:1px solid var(--linha);padding-block:26px;color:var(--apagado);font-size:13.5px}
+.rodape{border-top:1px solid var(--linha);padding-block:26px 90px;color:var(--apagado);font-size:13.5px}
 .rodape .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
-.rodape a{color:var(--suave);text-decoration:none}
 
-/* operários (cursores que trabalham na página) */
-#operarios{position:fixed;inset:0;pointer-events:none;z-index:45;overflow:hidden}
-.op{position:absolute;left:0;top:0;will-change:transform;transition-property:transform;transition-timing-function:cubic-bezier(.45,.05,.2,1)}
-.op svg{width:20px;height:20px;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
-.op .rotulo{position:absolute;left:16px;top:16px;white-space:nowrap;font:500 11.5px/1 var(--f-mono);padding:5px 8px;border-radius:6px;color:#071A17;background:var(--cor)}
-.op .rotulo::after{content:"";display:none}
-.op.digita .rotulo::after{display:inline-block;content:"";width:6px;height:10px;margin-left:5px;background:currentColor;vertical-align:-1px;animation:pisca .8s steps(1) infinite}
-.onda{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:2px solid var(--cor);animation:onda .7s ease-out forwards}
-@keyframes onda{from{transform:scale(.2);opacity:1}to{transform:scale(1.6);opacity:0}}
-[data-alvo]{transition:box-shadow .3s}
-.tocado{box-shadow:0 0 0 2px rgba(43,196,172,.55),0 0 34px rgba(43,196,172,.18)!important}
-#voce{position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border:1.5px solid rgba(43,196,172,.7);border-radius:50%;pointer-events:none;z-index:46;transition:width .2s,height .2s,margin .2s,border-color .2s;display:none}
-#voce span{position:absolute;left:30px;top:28px;font:500 11px/1 var(--f-mono);color:var(--mint);white-space:nowrap}
-#voce.sobre-algo{width:54px;height:54px;margin:-27px 0 0 -27px;border-color:var(--mint)}
-@media (pointer:fine){#voce{display:block}}
+/* revólver de objetivas (mostra o aumento da seção) */
+.revolver{position:fixed;z-index:44;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;gap:4px;padding:5px;border-radius:999px;background:rgba(15,26,44,.9);border:1px solid var(--linha);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.revolver a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:34px;padding:0 8px;border-radius:999px;font:500 12px/1 var(--f-mono);color:var(--apagado);text-decoration:none;transition:background .25s,color .25s}
+.revolver a.ativo{background:var(--mint);color:#062420;font-weight:700}
+@media (max-width:420px){.revolver a{min-width:40px;padding:0 6px}}
+
+/* anotações (setas de fotomicrografia) */
+#notas{position:absolute;left:0;top:0;width:100%;height:0;z-index:35;pointer-events:none}
+.nota{position:absolute;left:0;top:0;opacity:0;transition:opacity .35s}
+.nota.on{opacity:1}
+.nota svg{position:absolute;overflow:visible}
+.nota .rot{position:absolute;white-space:nowrap;font:500 12px/1 var(--f-mono);color:#062420;background:var(--cor);padding:6px 9px;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.nota .rot::after{content:"";display:inline-block;width:6px;height:11px;margin-left:4px;background:currentColor;vertical-align:-1px;animation:pisca .8s steps(1) infinite}
+.nota.pronta .rot::after{display:none}
+@keyframes pisca{50%{opacity:0}}
+.nota .haste{transform-origin:var(--ox) var(--oy);animation:crava .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes crava{from{transform:scale(.2);opacity:0}to{transform:none;opacity:1}}
+
+/* seu cursor: retículo da ocular + coordenadas da platina */
+#reticulo{position:fixed;left:0;top:0;width:44px;height:44px;margin:-22px 0 0 -22px;pointer-events:none;z-index:70;display:none}
+#reticulo svg{width:100%;height:100%;overflow:visible;transition:transform .2s}
+#reticulo span{position:absolute;left:30px;top:32px;font:500 10.5px/1 var(--f-mono);color:var(--mint);white-space:nowrap;background:rgba(11,20,36,.75);padding:3px 5px;border-radius:4px}
+#reticulo.sobre-algo svg{transform:scale(1.35)}
+@media (pointer:fine){
+  html.com-reticulo, html.com-reticulo *{cursor:none!important}
+  html.com-reticulo #reticulo{display:block}
+}
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
   html{scroll-behavior:auto}
-  #operarios,#voce{display:none!important}
+  #notas,#reticulo{display:none!important}
+  html.com-reticulo, html.com-reticulo *{cursor:auto!important}
 }
 </style>
 
@@ -252,7 +304,7 @@ section{padding-block:96px}
     <a class="marca" href="#inicio" aria-label="FR Dev, início"><span class="selo" aria-hidden="true">FR<i></i></span><span>FR <b>Dev</b></span></a>
     <nav class="menu" aria-label="Seções">
       <a href="#sobre">Sobre</a>
-      <a href="#projetos">Projetos</a>
+      <a href="#casos">Projetos</a>
       <a href="#servicos">Serviços</a>
       <a href="#contato">Contato</a>
     </nav>
@@ -260,148 +312,177 @@ section{padding-block:96px}
   </div>
 </header>
 
-<main id="inicio">
-  <div class="abertura">
-    <div class="gigante" aria-hidden="true"><span>PORTFÓLIO</span></div>
+<main>
+  <section class="abertura" id="inicio" data-aumento="4×" style="padding:0">
     <div class="wrap heroi">
       <div>
-        <p class="olho">FR Dev · Fortaleza-CE</p>
+        <p class="olho"><span class="aum">4×</span>FR Dev · Fortaleza-CE</p>
         <h1>Olá, eu sou Fábio. <em>Patologista que constrói sistemas.</em></h1>
-        <p class="lead">Sou <b>médico-veterinário patologista</b> e sócio do IFVET. Crio sites, portais de laudo e sistemas de gestão para <b>clínicas e laboratórios</b>, a partir dos problemas que vejo na rotina todo dia.</p>
+        <p class="lead">Passo o dia olhando lâmina e conhecendo a rotina de clínicas e laboratórios por dentro. Com isso, crio <b>sites, portais de laudo e sistemas de gestão</b> que resolvem o que trava o dia a dia.</p>
         <div class="acoes">
-          <a class="botao botao--cheio" href="#projetos" data-alvo>Ver projetos</a>
-          <a class="botao" href="https://wa.me/5585997712690?text=Ol%C3%A1%2C%20F%C3%A1bio!%20Vi%20o%20portf%C3%B3lio%20da%20FR%20Dev." target="_blank" rel="noopener" data-alvo>Pedir um orçamento</a>
+          <a class="botao botao--cheio" href="#casos" data-alvo data-nota="comece por aqui">Ver projetos</a>
+          <a class="botao" href="https://wa.me/5585997712690?text=Ol%C3%A1%2C%20F%C3%A1bio!%20Vi%20o%20portf%C3%B3lio%20da%20FR%20Dev." target="_blank" rel="noopener" data-alvo data-nota="orçamento sem compromisso">Pedir um orçamento</a>
+        </div>
+        <div class="autor" data-alvo data-nota="quem faz">
+          <img src="img/fabio.jpg" alt="" width="768" height="1024">
+          <div><b>Fábio Ranyeri</b><span>Patologista veterinário · <span class="ponto mono" style="display:inline-flex">aceitando projetos</span></span></div>
         </div>
       </div>
-      <figure class="foto" data-alvo>
-        <img src="img/fabio.jpg" alt="Fábio Ranyeri sentado ao lado do microscópio, de jaleco escuro do IFVET" width="768" height="1024">
-        <figcaption class="etiqueta">
-          <div><b>Fábio Ranyeri</b><span>Patologista veterinário · FR Dev</span></div>
-          <span class="ponto mono">aceitando projetos</span>
-        </figcaption>
-      </figure>
+      <div class="ocular">
+        <div class="campo" data-alvo data-nota="lâmina real do acervo" data-ponto="0.2,0.24" role="img" aria-label="Campo do microscópio mostrando um corte histológico corado em H&amp;E, com a régua da ocular por cima">
+          <img src="img/lamina-ocular.jpg" alt="" width="1000" height="1000">
+          <svg viewBox="0 0 400 400" aria-hidden="true">
+            <g stroke="rgba(243,246,250,.75)" stroke-width="1.2" fill="none">
+              <line x1="200" y1="40" x2="200" y2="360"/>
+              <line x1="40" y1="200" x2="360" y2="200" stroke-opacity=".35"/>
+            </g>
+            <g stroke="rgba(243,246,250,.9)" stroke-width="1.4" id="regua"></g>
+            <g fill="rgba(243,246,250,.9)" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" id="regua-num"></g>
+          </svg>
+        </div>
+        <div class="etiqueta-lamina">
+          <div class="fosco"><b>FR DEV</b><span>2026 · H&amp;E</span><span>portfólio</span></div>
+          <div class="legenda"><b>Tumor misto benigno, glândula mamária, cadela</b><span>lâmina do acervo · sem identificação</span></div>
+        </div>
+      </div>
     </div>
     <div class="wrap">
       <div class="numeros">
-        <div data-alvo><b data-conta="6">6</b><span>sistemas no ar ou em teste</span></div>
-        <div data-alvo><b>3 telas</b><span>celular, tablet e computador conferidos em cada entrega</span></div>
-        <div data-alvo><b data-conta="0">0</b><span>mensalidade de software: tudo roda em planos grátis</span></div>
-        <div data-alvo><b>LGPD</b><span>login, permissões e dados protegidos desde o início</span></div>
-      </div>
-    </div>
-  </div>
-
-  <section class="sobre" id="sobre">
-    <div class="wrap">
-      <div class="grade2">
-        <div class="cabeca" style="margin-bottom:0">
-          <p class="olho">Sobre</p>
-          <h2>Conheço a rotina por dentro, porque vivo ela todo dia.</h2>
-          <div class="texto">
-            <p>Os sistemas deste portfólio nasceram de problemas reais: <b>laudo mandado um por um no WhatsApp</b>, agenda em papel, rota de coleta montada de cabeça, comissão calculada na calculadora.</p>
-            <p>Resolvi primeiro no meu laboratório. Depois, para clientes. Você conversa direto comigo, do primeiro rascunho até o sistema no ar, e recebe algo pensado <b>para quem usa</b>.</p>
-          </div>
-        </div>
-        <div class="codigo" data-alvo>
-          <div class="barra mono"><i></i><i></i><i></i><span>fabio.js</span></div>
-<pre><span class="k">const</span> <span class="p">fabio</span> = {
-  profissao: <span class="s">"patologista veterinário"</span>,
-  laboratorio: <span class="s">"IFVET Patologia Diagnóstica"</span>,
-  cidade: <span class="s">"Fortaleza-CE"</span>,
-  constroi: [
-    <span class="s">"portais de laudo"</span>,
-    <span class="s">"agenda e comanda"</span>,
-    <span class="s">"financeiro e comissões"</span>,
-    <span class="s">"sites que abrem rápido"</span>
-  ],
-  <span class="c">// sem intermediário</span>
-  conversa: <span class="s">"direto com você"</span>
-}<span class="cursor-txt" aria-hidden="true"></span></pre>
-        </div>
+        <div data-alvo data-nota="no ar ou em teste"><b>7</b><span>sistemas no ar ou em teste</span></div>
+        <div data-alvo data-nota="390 · 820 · 1280 px"><b>3 telas</b><span>celular, tablet e computador conferidos em cada entrega</span></div>
+        <div data-alvo data-nota="planos grátis"><b>R$ 0</b><span>de mensalidade de software nos sistemas entregues</span></div>
+        <div data-alvo data-nota="dados protegidos"><b>LGPD</b><span>login, permissões e dados protegidos desde o início</span></div>
       </div>
     </div>
   </section>
 
-  <section class="projetos" id="projetos" style="padding-top:24px">
+  <section class="sobre" id="sobre" data-aumento="10×">
+    <div class="wrap grade2">
+      <figure class="retrato foco" data-alvo data-nota="o patologista">
+        <img src="img/fabio.jpg" alt="Fábio Ranyeri ao lado do microscópio, de jaleco do IFVET" loading="lazy" width="768" height="1024">
+        <figcaption class="mono"><span>Fábio Ranyeri</span><span>IFVET · Fortaleza</span></figcaption>
+      </figure>
+      <div>
+        <p class="olho"><span class="aum">10×</span>Sobre</p>
+        <h2 style="font-size:clamp(32px,4.4vw,54px);margin-top:14px">Conheço a rotina por dentro, porque vivo ela todo dia.</h2>
+        <div class="texto">
+          <p>Sou médico-veterinário patologista e sócio do IFVET. Os sistemas deste portfólio nasceram de problemas reais: <b>laudo mandado um por um no WhatsApp</b>, agenda em papel, rota de coleta montada de cabeça, comissão feita na calculadora.</p>
+          <p>Resolvi primeiro no meu laboratório. Depois, para clientes. Você conversa direto comigo, do primeiro rascunho até o sistema no ar.</p>
+        </div>
+        <dl class="ficha" data-alvo data-nota="sem intermediário">
+          <dt>Profissão</dt><dd>Patologista veterinário</dd>
+          <dt>Laboratório</dt><dd>IFVET Patologia Diagnóstica</dd>
+          <dt>Constrói</dt><dd>Portais de laudo, agenda e comanda, financeiro, sites</dd>
+          <dt>Atendimento</dt><dd>Direto com você, do início ao fim</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="casos" data-aumento="20×" style="padding-top:24px">
     <div class="wrap">
       <div class="cabeca">
-        <p class="olho">Projetos</p>
-        <h2>Sistemas em uso na rotina de verdade.</h2>
-        <p>Todas as telas usam dados fictícios. Nenhum laudo, animal, tutor ou cliente real aparece aqui.</p>
+        <p class="olho"><span class="aum">20×</span>Projetos</p>
+        <h2>Cada projeto, um caso resolvido.</h2>
+        <p>Queixa, conduta e evolução, como num laudo. Todas as telas usam dados fictícios: nenhum laudo, animal, tutor ou cliente real aparece aqui.</p>
       </div>
 
       <div class="grupo"><h3>Saúde animal</h3><span class="mono">laboratórios · ensino · logística</span></div>
 
-      <article class="destaque">
+      <article class="caso">
         <div class="midia">
-          <figure class="tela varredura" data-alvo>
+          <figure class="tela foco" data-alvo data-nota="laudo liberado">
             <div class="barra"><i></i><i></i><i></i><span>laudos.ifvet.com.br</span></div>
-            <img src="img/portal-lista.jpg" alt="Área da clínica no portal de laudos, com a lista de laudos liberados e em andamento" loading="lazy" width="1400" height="875">
+            <img src="img/portal-lista.jpg" alt="Área da clínica no portal de laudos, com laudos liberados e em andamento" loading="lazy" width="1400" height="875">
           </figure>
-          <figure class="tela cel" data-alvo><img src="img/portal-lista-cel.jpg" alt="Portal de laudos no celular" loading="lazy" width="520" height="1125"></figure>
+          <figure class="tela cel foco" data-alvo data-nota="no celular da clínica"><img src="img/portal-lista-cel.jpg" alt="Portal de laudos no celular" loading="lazy" width="520" height="1125"></figure>
         </div>
         <div class="info">
-          <span class="status">● Em uso por clínicas parceiras</span>
+          <div class="protocolo"><b>P01-26</b><span class="status">● Em uso por clínicas parceiras</span></div>
           <h4>Portal de laudos IFVET</h4>
-          <p>O laudo liberado aparece para a clínica na hora, com aviso por e-mail. A recepção parou de mandar PDF um por um.</p>
-          <ul class="itens">
-            <li><b>Clínica</b> entra com e-mail e senha e vê todos os casos: em andamento, liberados e prazo de cada um.</li>
-            <li><b>Tutor</b> abre o laudo com o protocolo e um código.</li>
-            <li><b>Requisição digital</b> de exames em 5 passos, no lugar do papel.</li>
-            <li>Por trás, a <b>bancada do laboratório</b>: recebimento, conferência, prazos e painel da equipe.</li>
-          </ul>
+          <dl class="laudo">
+            <div><dt>Queixa</dt><dd>Laudos enviados <b>um por um</b> no WhatsApp e no e-mail. A clínica perguntava toda hora se o laudo tinha saído.</dd></div>
+            <div><dt>Conduta</dt><dd>Área da clínica com login, código para o tutor, <b>requisição digital</b> em 5 passos e a bancada do laboratório por trás.</dd></div>
+            <div><dt>Evolução</dt><dd>O laudo aparece para a clínica na hora em que é liberado, com aviso por e-mail.</dd></div>
+          </dl>
           <div class="chips"><span>Apps Script</span><span>Google Drive</span><span>Cloudflare</span><span>testes automáticos</span></div>
           <a class="link" href="https://laudos.ifvet.com.br" target="_blank" rel="noopener">Ver no ar ↗</a>
         </div>
       </article>
 
+      <article class="caso inverte">
+        <div class="midia midia--micro">
+          <figure class="tela foco" data-alvo data-nota="a tela do patologista">
+            <div class="barra"><i></i><i></i><i></i><span>IFVET Microview · captura</span></div>
+            <img class="natural" src="img/microview.jpg" alt="Tela do IFVET Microview: imagem ao vivo do microscópio, escolha da objetiva de 4× a 100×, histologia ou citologia e botão Fotografar" loading="lazy" width="1600" height="735">
+          </figure>
+          <figure class="tela mini" data-alvo data-nota="80 campos, uma lâmina">
+            <div class="barra"><i></i><i></i><i></i><span>panorama</span></div>
+            <div class="mosaico" id="mosaico" role="img" aria-label="Fotos de vários campos do microscópio se juntando num panorama único de um carcinoma de mama">
+              <span class="medida">medida calibrada</span>
+              <span class="progresso" id="mosaico-txt">lâmina pronta ✓</span>
+            </div>
+          </figure>
+        </div>
+        <div class="info">
+          <div class="protocolo"><b>P02-26</b><span class="status status--dev">● Em desenvolvimento</span></div>
+          <h4>IFVET Microview: microfotografia e lâmina virtual</h4>
+          <dl class="laudo">
+            <div><dt>Queixa</dt><dd>A lâmina só existia no microscópio. Para aula ou segunda opinião, era foto por foto e medida feita à mão.</dd></div>
+            <div><dt>Conduta</dt><dd>Programa ligado à câmera do microscópio: fotografa já no protocolo do caso, ajusta a luz, <b>mede com régua calibrada</b>, monta a prancha e copia a foto pronta para o Word do laudo. Também junta dezenas de campos num <b>panorama</b> e gera a <b>lâmina virtual</b> com zoom contínuo.</dd></div>
+            <div><dt>Evolução</dt><dd>As lâminas do acervo viram material de aula e base para telepatologia. Próximo passo: <b>contagem de núcleos e mitoses</b> na área padrão, com o patologista confirmando cada uma.</dd></div>
+          </dl>
+          <p class="mono" style="color:var(--apagado)">Tudo roda no computador do laboratório: nenhuma imagem de paciente sai de lá.</p>
+        </div>
+      </article>
+
       <div class="cartoes">
-        <article class="cartao" data-alvo>
-          <div class="capa varredura"><img src="img/ifvet-inicio.jpg" alt="Página inicial do site do IFVET" loading="lazy" width="1400" height="875"></div>
+        <article class="cartao" data-alvo data-nota="uma página por exame">
+          <div class="capa foco"><img src="img/ifvet-inicio.jpg" alt="Página inicial do site do IFVET" loading="lazy" width="1400" height="875"></div>
           <div class="corpo">
-            <span class="status">● No ar</span>
+            <div class="protocolo"><b>P03-26</b><span class="status">● No ar</span></div>
             <h4>Site do IFVET</h4>
-            <p>Uma página para cada exame, em linguagem simples para o tutor e com a parte técnica para o veterinário. Preparado para o Google.</p>
+            <p>Uma página para cada exame, em linguagem simples para o tutor e com a parte técnica para o veterinário.</p>
             <a class="link" href="https://ifvet.com.br" target="_blank" rel="noopener">ifvet.com.br ↗</a>
           </div>
         </article>
-        <article class="cartao" data-alvo>
-          <div class="capa varredura"><img src="img/quiz-telao.jpg" alt="Telão do quiz ao vivo com a porcentagem de cada resposta" loading="lazy" width="1400" height="787"></div>
+        <article class="cartao" data-alvo data-nota="resultado no telão">
+          <div class="capa foco"><img src="img/quiz-telao.jpg" alt="Telão do quiz ao vivo com a porcentagem de cada resposta" loading="lazy" width="1400" height="787"></div>
           <div class="corpo">
-            <span class="status">● No ar</span>
+            <div class="protocolo"><b>P04-26</b><span class="status">● No ar</span></div>
             <h4>Quiz ao vivo</h4>
-            <p>Os alunos leem o QR code, respondem pelo celular e o resultado aparece no telão na hora, com placar e pódio.</p>
+            <p>A turma lê o QR code, responde pelo celular e o resultado aparece no telão na hora, com placar e pódio.</p>
             <a class="link" href="https://quiz.ifvet.com.br" target="_blank" rel="noopener">quiz.ifvet.com.br ↗</a>
           </div>
         </article>
-        <article class="cartao" data-alvo>
-          <div class="capa varredura"><img src="img/lam-lamina.jpg" alt="Lâmina de histopatologia aberta no visualizador, com zoom e ferramentas" loading="lazy" width="1400" height="875"></div>
+        <article class="cartao" data-alvo data-nota="zoom de 2× a 40×">
+          <div class="capa foco"><img src="img/lam-lamina.jpg" alt="Lâmina de histopatologia aberta no visualizador, com zoom e ferramentas" loading="lazy" width="1400" height="875"></div>
           <div class="corpo">
-            <span class="status status--dev">● Em desenvolvimento</span>
-            <h4>Lâminas virtuais</h4>
-            <p>A lâmina inteira na tela, com zoom contínuo de 2× a 40×, quiz "clique na lesão" e tour guiado pelo patologista.</p>
+            <div class="protocolo"><b>P05-26</b><span class="status status--dev">● Em desenvolvimento</span></div>
+            <h4>Banco de lâminas virtuais</h4>
+            <p>As lâminas do programa abertas no navegador, com zoom de 2× a 40×, quiz "clique na lesão" e tour guiado pelo patologista.</p>
           </div>
         </article>
-        <article class="cartao" data-alvo>
-          <div class="capa dupla"><img src="img/moto-hoje.jpg" alt="Painel do dia com as rotas de cada motoboy" loading="lazy" width="520" height="1125"><img src="img/moto-rota.jpg" alt="Rota do motoboy com as paradas em ordem" loading="lazy" width="520" height="1125"></div>
+        <article class="cartao" data-alvo data-nota="ordem mais curta">
+          <div class="capa dupla foco"><img src="img/moto-hoje.jpg" alt="Painel do dia com as rotas de cada motoboy" loading="lazy" width="520" height="1125"><img src="img/moto-rota.jpg" alt="Rota do motoboy com as paradas em ordem" loading="lazy" width="520" height="1125"></div>
           <div class="corpo">
-            <span class="status status--interno">● Sistema interno</span>
+            <div class="protocolo"><b>P06-26</b><span class="status status--interno">● Sistema interno</span></div>
             <h4>Rotas de coleta</h4>
-            <p>A recepção monta as rotas dos motoboys, o app acha a ordem mais curta e fecha o pagamento por quilômetro. O motoboy recebe a rota por link.</p>
+            <p>A recepção monta as rotas dos motoboys, o app acha a ordem mais curta e fecha o pagamento por quilômetro.</p>
           </div>
         </article>
-        <article class="cartao" data-alvo>
-          <div class="capa"><div class="vazio"><div><b>em implantação</b>fila de PDFs → leitura automática<br>→ clínica, e-mail e WhatsApp</div></div></div>
+        <article class="cartao" data-alvo data-nota="leitura do PDF">
+          <div class="capa"><div class="fila" aria-hidden="true"><div>atendimento 4812 · hemograma</div><div>atendimento 4813 · bioquímica</div><div class="lendo">atendimento 4814 · urinálise</div></div></div>
           <div class="corpo">
-            <span class="status status--dev">● Em implantação</span>
+            <div class="protocolo"><b>P07-26</b><span class="status status--dev">● Em implantação</span></div>
             <h4>Portal para patologia clínica</h4>
-            <p>Para um laboratório de Fortaleza: a equipe solta os PDFs do dia de uma vez, o portal lê de quem é cada laudo e entrega para cada clínica do jeito que ela pediu.</p>
+            <p>Para um laboratório de Fortaleza: a equipe solta os PDFs do dia de uma vez e o portal lê de quem é cada laudo e entrega para cada clínica.</p>
           </div>
         </article>
-        <article class="cartao" data-alvo>
-          <div class="capa dupla"><img src="img/quiz-cel.jpg" alt="Pergunta do quiz no celular do aluno" loading="lazy" width="520" height="1125"><img src="img/lam-cel.jpg" alt="Lâmina virtual no celular" loading="lazy" width="520" height="1125"></div>
+        <article class="cartao" data-alvo data-nota="conferido em 390 px">
+          <div class="capa dupla foco"><img src="img/quiz-cel.jpg" alt="Pergunta do quiz no celular do aluno" loading="lazy" width="520" height="1125"><img src="img/lam-cel.jpg" alt="Lâmina virtual no celular" loading="lazy" width="520" height="1125"></div>
           <div class="corpo">
-            <span class="status">● Celular primeiro</span>
+            <div class="protocolo"><b>Rotina</b><span class="status">● Celular primeiro</span></div>
             <h4>Feito para a mão</h4>
             <p>Todo projeto é desenhado e conferido no celular antes do computador, porque é ali que o veterinário e o tutor abrem.</p>
           </div>
@@ -410,45 +491,42 @@ section{padding-block:96px}
 
       <div class="grupo"><h3>Gestão de clínicas</h3><span class="mono">agenda · comanda · financeiro</span></div>
 
-      <article class="destaque inverte">
+      <article class="caso inverte">
         <div class="midia">
-          <figure class="tela varredura" data-alvo>
-            <div class="barra"><i></i><i></i><i></i><span>acasambar.com.br/#/bancada</span></div>
-            <img src="img/ca-agenda.jpg" alt="Agenda do dia com todas as profissionais lado a lado" loading="lazy" width="1280" height="800">
+          <figure class="tela foco" data-alvo data-nota="arrastar para remarcar">
+            <div class="barra"><i></i><i></i><i></i><span>acasambar.com.br · bancada</span></div>
+            <img src="img/ca-agenda.jpg" alt="Agenda do dia com todos os profissionais lado a lado" loading="lazy" width="1280" height="800">
           </figure>
-          <figure class="tela cel" data-alvo><img src="img/ca-agenda-cel.jpg" alt="Agenda do dia no celular, em lista" loading="lazy" width="390" height="844"></figure>
+          <figure class="tela cel foco" data-alvo data-nota="agenda em lista"><img src="img/ca-agenda-cel.jpg" alt="Agenda do dia no celular, em lista" loading="lazy" width="390" height="844"></figure>
         </div>
         <div class="info">
-          <span class="status">● Em uso pela equipe</span>
+          <div class="protocolo"><b>P08-26</b><span class="status">● Em uso pela equipe</span></div>
           <h4>Agenda, comanda e financeiro de uma clínica multiprofissional</h4>
-          <p>Casa Âmbar, em Fortaleza: fisioterapia, estética, Pilates e Yoga. Saiu de um sistema pago e genérico para um sistema com as regras da casa, sem mensalidade.</p>
-          <ul class="itens">
-            <li><b>Agenda</b> com todos os profissionais lado a lado, arrastar para remarcar e confirmação pelo link.</li>
-            <li><b>Comanda e caixa do dia</b>, pagamento em várias formas, pacotes e vale-presente.</li>
-            <li><b>Taxas da maquininha</b> por bandeira e parcela, e <b>comissão</b> calculada sozinha.</li>
-            <li><b>Ficha do cliente</b> com anamnese, fotos de evolução e contrato assinado no celular.</li>
-          </ul>
-          <p class="mono" style="color:var(--apagado)">Serve igual para clínica veterinária, banho e tosa ou hospital: muda o paciente, o sistema é o mesmo.</p>
+          <dl class="laudo">
+            <div><dt>Queixa</dt><dd>Casa Âmbar (fisioterapia, estética, Pilates e Yoga) pagava um sistema genérico que não seguia as regras da casa.</dd></div>
+            <div><dt>Conduta</dt><dd><b>Agenda</b> de todos os profissionais lado a lado, <b>comanda e caixa</b>, taxas da maquininha, <b>comissão automática</b>, ficha com anamnese e contrato assinado no celular.</dd></div>
+            <div><dt>Evolução</dt><dd>Sistema próprio, sem mensalidade. Serve igual para clínica veterinária, banho e tosa ou hospital.</dd></div>
+          </dl>
           <a class="link" href="https://www.acasambar.com.br" target="_blank" rel="noopener">Ver o site no ar ↗</a>
         </div>
       </article>
     </div>
   </section>
 
-  <section class="servicos" id="servicos">
+  <section class="servicos" id="servicos" data-aumento="40×">
     <div class="wrap">
       <div class="cabeca">
-        <p class="olho">Serviços</p>
+        <p class="olho"><span class="aum">40×</span>Serviços</p>
         <h2>O que eu entrego.</h2>
         <p>Cada sistema segue o jeito da sua equipe trabalhar. O domínio, os dados e os acessos ficam no nome da sua empresa.</p>
       </div>
       <div class="matriz">
-        <div data-alvo><span class="rot mono">site</span><h4>Site institucional</h4><p>Exames ou serviços, contato, WhatsApp e páginas pensadas para aparecer no Google.</p><span class="preco">a partir de R$ 800</span></div>
-        <div data-alvo><span class="rot mono">laudos</span><h4>Portal de laudos</h4><p>Clínica e tutor recebem o laudo sozinhos, com login, histórico guardado e aviso por e-mail.</p><span class="preco">sob orçamento</span></div>
-        <div data-alvo><span class="rot mono">agenda</span><h4>Agenda e comanda</h4><p>Agenda de vários profissionais, comanda, caixa do dia e lembrete da véspera.</p><span class="preco">sob orçamento</span></div>
-        <div data-alvo><span class="rot mono">financeiro</span><h4>Financeiro e comissões</h4><p>Taxas da maquininha, comissão por profissional e relatório do mês pronto para imprimir.</p><span class="preco">sob orçamento</span></div>
-        <div data-alvo><span class="rot mono">rotina</span><h4>Sistemas internos</h4><p>Rotas de coleta, recebimento de amostras, estoque: aquela planilha que virou um app.</p><span class="preco">sob orçamento</span></div>
-        <div data-alvo><span class="rot mono">ensino</span><h4>Educação interativa</h4><p>Quiz ao vivo para aulas e treinamentos, lâminas virtuais e material didático.</p><span class="preco">sob orçamento</span></div>
+        <div data-alvo data-nota="a porta de entrada"><span class="rot mono">site</span><h4>Site institucional</h4><p>Exames ou serviços, contato, WhatsApp e páginas pensadas para aparecer no Google.</p><span class="preco">a partir de R$ 800</span></div>
+        <div data-alvo data-nota="laudo chega sozinho"><span class="rot mono">laudos</span><h4>Portal de laudos</h4><p>Clínica e tutor recebem o laudo sozinhos, com login, histórico guardado e aviso por e-mail.</p><span class="preco">sob orçamento</span></div>
+        <div data-alvo data-nota="vários profissionais"><span class="rot mono">agenda</span><h4>Agenda e comanda</h4><p>Agenda de vários profissionais, comanda, caixa do dia e lembrete da véspera.</p><span class="preco">sob orçamento</span></div>
+        <div data-alvo data-nota="comissão automática"><span class="rot mono">financeiro</span><h4>Financeiro e comissões</h4><p>Taxas da maquininha, comissão por profissional e relatório do mês pronto.</p><span class="preco">sob orçamento</span></div>
+        <div data-alvo data-nota="a planilha virou app"><span class="rot mono">rotina</span><h4>Sistemas internos</h4><p>Rotas de coleta, recebimento de amostras, estoque: aquela planilha que virou um app.</p><span class="preco">sob orçamento</span></div>
+        <div data-alvo data-nota="aula interativa"><span class="rot mono">ensino</span><h4>Educação interativa</h4><p>Quiz ao vivo para aulas e treinamentos, lâminas virtuais e material didático.</p><span class="preco">sob orçamento</span></div>
       </div>
       <div class="jeito">
         <div><h4>Bonito e simples</h4><p>Letras legíveis e botões fáceis de tocar, no celular, no tablet e no computador.</p></div>
@@ -461,15 +539,16 @@ section{padding-block:96px}
     </div>
   </section>
 
-  <section class="contato" id="contato">
+  <section class="contato" id="contato" data-aumento="100×">
+    <div class="fundo" aria-hidden="true"></div>
     <div class="wrap">
-      <p class="olho">Contato</p>
-      <h2>Vamos construir o sistema que sua equipe <em>vai usar todo dia.</em></h2>
+      <p class="olho"><span class="aum">100×</span>Requisição</p>
+      <h2>Me mande a queixa. <em>Eu devolvo a conduta.</em></h2>
       <p>Conte como é a rotina hoje e onde está o gargalo. Eu respondo com uma proposta clara, com prazos e valores.</p>
-      <a class="botao botao--cheio" href="https://wa.me/5585997712690?text=Ol%C3%A1%2C%20F%C3%A1bio!%20Vi%20o%20portf%C3%B3lio%20da%20FR%20Dev." target="_blank" rel="noopener" data-alvo>Chamar no WhatsApp</a>
+      <a class="botao botao--cheio" href="https://wa.me/5585997712690?text=Ol%C3%A1%2C%20F%C3%A1bio!%20Vi%20o%20portf%C3%B3lio%20da%20FR%20Dev." target="_blank" rel="noopener" data-alvo data-nota="abrir requisição">Chamar no WhatsApp</a>
       <div class="canais">
-        <div class="canal" data-alvo><div><small>WhatsApp</small><b>(85) 99771-2690</b></div><button class="copiar" type="button" data-copia="(85) 99771-2690">copiar</button></div>
-        <div class="canal" data-alvo><div><small>E-mail</small><b>frnr.mv@icloud.com</b></div><button class="copiar" type="button" data-copia="frnr.mv@icloud.com">copiar</button></div>
+        <div class="canal" data-alvo data-nota="copie aqui"><div><small>WhatsApp</small><b>(85) 99771-2690</b></div><button class="copiar" type="button" data-copia="(85) 99771-2690">copiar</button></div>
+        <div class="canal"><div><small>E-mail</small><b>frnr.mv@icloud.com</b></div><button class="copiar" type="button" data-copia="frnr.mv@icloud.com">copiar</button></div>
       </div>
     </div>
   </section>
@@ -478,155 +557,223 @@ section{padding-block:96px}
 <footer class="rodape">
   <div class="wrap">
     <span><b style="color:var(--branco)">FR</b> · Feito por Fábio Ranyeri · Fortaleza-CE</span>
-    <span>As telas deste portfólio usam dados fictícios.</span>
+    <span>Telas com dados fictícios · lâminas do acervo, sem identificação.</span>
   </div>
 </footer>
 
-<div id="operarios" aria-hidden="true"></div>
-<div id="voce" aria-hidden="true"><span>você</span></div>
+<nav class="revolver" aria-label="Aumento: ir para a seção">
+  <a href="#inicio" data-sec="inicio" class="ativo">4×</a>
+  <a href="#sobre" data-sec="sobre">10×</a>
+  <a href="#casos" data-sec="casos">20×</a>
+  <a href="#servicos" data-sec="servicos">40×</a>
+  <a href="#contato" data-sec="contato">100×</a>
+</nav>
+
+<div id="notas" aria-hidden="true"></div>
+<div id="reticulo" aria-hidden="true">
+  <svg viewBox="-22 -22 44 44"><circle r="15" fill="none" stroke="#2BC4AC" stroke-width="1.5"/><g stroke="#F3F6FA" stroke-width="1.3"><line x1="-21" y1="0" x2="-6" y2="0"/><line x1="6" y1="0" x2="21" y2="0"/><line x1="0" y1="-21" x2="0" y2="-6"/><line x1="0" y1="6" x2="0" y2="21"/></g><g stroke="#2BC4AC" stroke-width="1"><line x1="-11" y1="-2" x2="-11" y2="2"/><line x1="11" y1="-2" x2="11" y2="2"/><line x1="-2" y1="-11" x2="2" y2="-11"/><line x1="-2" y1="11" x2="2" y2="11"/></g><circle r="1.4" fill="#2BC4AC"/></svg>
+  <span>x 0,0 · y 0,0</span>
+</div>
 
 <script>
 (function(){
+  var raiz = document.documentElement;
   var reduz = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // régua da ocular (graticule): 100 divisões, número a cada 10
+  var regua = document.getElementById('regua'), num = document.getElementById('regua-num');
+  var ns = 'http://www.w3.org/2000/svg', html = '', txt = '';
+  for (var i = 0; i <= 100; i++){
+    var x = 100 + i * 2, alto = i % 10 === 0 ? 12 : (i % 5 === 0 ? 8 : 4);
+    html += '<line x1="' + x + '" y1="' + (200 - alto) + '" x2="' + x + '" y2="200"/>';
+    if (i % 10 === 0) txt += '<text x="' + x + '" y="' + (200 - 16) + '">' + (i / 10) + '</text>';
+  }
+  regua.innerHTML = html; num.innerHTML = txt;
 
   // copiar contato
   document.querySelectorAll('.copiar').forEach(function(b){
     b.addEventListener('click', function(){
       var t = b.getAttribute('data-copia');
       var ok = function(){ b.textContent = 'copiado ✓'; setTimeout(function(){ b.textContent = 'copiar'; }, 1600); };
-      try {
-        navigator.clipboard.writeText(t).then(ok, function(){ selecionar(b); });
-      } catch(e){ selecionar(b); }
+      try { navigator.clipboard.writeText(t).then(ok, function(){ selecionar(b); }); } catch(e){ selecionar(b); }
     });
   });
   function selecionar(b){
     var alvo = b.parentNode.querySelector('b');
     var r = document.createRange(); r.selectNodeContents(alvo);
     var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-    b.textContent = 'selecionado';
-    setTimeout(function(){ b.textContent = 'copiar'; }, 1600);
+    b.textContent = 'selecionado'; setTimeout(function(){ b.textContent = 'copiar'; }, 1600);
   }
+
+  // revólver: marca o aumento da seção que está no meio da tela
+  var secoes = [].slice.call(document.querySelectorAll('[data-aumento]'));
+  var botoes = {};
+  document.querySelectorAll('.revolver a').forEach(function(a){ botoes[a.getAttribute('data-sec')] = a; });
+  function marcarAumento(){
+    var meio = window.innerHeight * .45, atual = secoes[0];
+    secoes.forEach(function(s){ if (s.getBoundingClientRect().top <= meio) atual = s; });
+    Object.keys(botoes).forEach(function(k){ botoes[k].classList.toggle('ativo', k === atual.id); });
+  }
+  window.addEventListener('scroll', marcarAumento, { passive: true });
+  marcarAumento();
+
+
+  // mosaico do panorama: monta as peças (sempre montado sem script)
+  var mos = document.getElementById('mosaico'), mtxt = document.getElementById('mosaico-txt');
+  (function(){
+    var col = 6, lin = 4, html = '';
+    for (var r = 0; r < lin; r++) for (var c = 0; c < col; c++){
+      html += '<i style="background-position:' + (c / (col - 1) * 100) + '% ' + (r / (lin - 1) * 100) + '%"></i>';
+    }
+    mos.insertAdjacentHTML('afterbegin', html);
+  })();
 
   if (reduz) return;
 
-  // varredura nas telas quando aparecem
+  // foco: imagens fora da tela começam desfocadas e entram em foco ao aparecer
   if ('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(es){
-      es.forEach(function(e){
-        if (e.isIntersecting){ e.target.classList.add('ativa'); io.unobserve(e.target); }
-      });
-    }, { threshold: .35 });
-    document.querySelectorAll('.varredura').forEach(function(el){ io.observe(el); });
-
-    // números contam quando aparecem (o valor final já está escrito na página)
-    var io2 = new IntersectionObserver(function(es){
-      es.forEach(function(e){
-        if (!e.isIntersecting) return;
-        io2.unobserve(e.target);
-        var fim = +e.target.getAttribute('data-conta');
-        if (!fim) return;
-        var t0 = performance.now();
-        (function passo(t){
-          var k = Math.min(1, (t - t0) / 900);
-          e.target.textContent = Math.round(fim * (1 - Math.pow(1 - k, 3)));
-          if (k < 1) requestAnimationFrame(passo);
-        })(t0);
-      });
-    }, { threshold: .6 });
-    document.querySelectorAll('[data-conta]').forEach(function(el){ io2.observe(el); });
+      es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.remove('desfocado'); io.unobserve(e.target); } });
+    }, { threshold: .3 });
+    document.querySelectorAll('.foco').forEach(function(el){
+      var r = el.getBoundingClientRect();
+      if (r.top > window.innerHeight){ el.classList.add('desfocado'); io.observe(el); }
+    });
   }
 
-  // o seu cursor ("você")
-  var voce = document.getElementById('voce');
+
+  // o panorama se monta quando aparece, e repete de vez em quando
+  var pecas = [].slice.call(mos.querySelectorAll('i'));
+  function soltar(){
+    pecas.forEach(function(p){
+      p.style.setProperty('--sx', (Math.random() * 28 - 14) + 'px');
+      p.style.setProperty('--sy', (Math.random() * 22 - 11) + 'px');
+      p.style.transitionDelay = '0s';
+    });
+    mos.classList.add('solto'); mtxt.textContent = 'campo 0 de 80';
+  }
+  function montar(){
+    var ordem = pecas.slice().sort(function(){ return Math.random() - .5; });
+    ordem.forEach(function(p, i){ p.style.transitionDelay = (i * 45) + 'ms'; });
+    mos.classList.remove('solto');
+    var k = 0, t = setInterval(function(){
+      k += 4; mtxt.textContent = 'juntando campo ' + Math.min(k, 80) + ' de 80';
+      if (k >= 80){ clearInterval(t); mtxt.textContent = 'lâmina pronta ✓'; }
+    }, 55);
+  }
+  if ('IntersectionObserver' in window){
+    var rm = mos.getBoundingClientRect();
+    if (rm.top > window.innerHeight) soltar();
+    var iom = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting && mos.classList.contains('solto')) montar();
+        if (!e.isIntersecting && !mos.classList.contains('solto')) soltar();
+      });
+    }, { threshold: .45 });
+    iom.observe(mos);
+  }
+
+  // seu cursor vira o retículo, com as coordenadas da platina (em mm, como no charriot)
+  var ret = document.getElementById('reticulo'), coord = ret.querySelector('span');
   if (window.matchMedia('(pointer: fine)').matches){
+    raiz.classList.add('com-reticulo');
     var mx = -100, my = -100, vx = -100, vy = -100;
     window.addEventListener('pointermove', function(e){ mx = e.clientX; my = e.clientY; }, { passive: true });
-    document.addEventListener('pointerover', function(e){
-      voce.classList.toggle('sobre-algo', !!e.target.closest('a,button,[data-alvo]'));
-    });
+    document.addEventListener('pointerover', function(e){ ret.classList.toggle('sobre-algo', !!e.target.closest('a,button')); });
+    document.addEventListener('pointerleave', function(){ mx = my = -100; });
     (function segue(){
-      vx += (mx - vx) * .2; vy += (my - vy) * .2;
-      voce.style.transform = 'translate(' + vx + 'px,' + vy + 'px)';
+      vx += (mx - vx) * .35; vy += (my - vy) * .35;
+      ret.style.transform = 'translate(' + vx + 'px,' + vy + 'px)';
+      var px = (mx + window.scrollX) / 20, py = (my + window.scrollY) / 20;
+      coord.textContent = 'x ' + px.toFixed(1).replace('.', ',') + ' · y ' + py.toFixed(1).replace('.', ',');
       requestAnimationFrame(segue);
     })();
   }
 
-  // operários: cursores que andam pela página e "trabalham" nas peças
-  var camada = document.getElementById('operarios');
-  var EQUIPE = [
-    { cor: '#2BC4AC', falas: ['publicando laudo', 'avisando a clínica', 'PDF lido ✓', 'novo laudo'] },
-    { cor: '#8FB8FF', falas: ['remarcando 14h', 'nova comanda', 'caixa fechado ✓', 'confirmou ✓'] },
-    { cor: '#FFC45C', falas: ['conferindo 390px', 'testes ✓', 'LGPD ok', 'revisando'] },
-    { cor: '#F3F6FA', falas: ['git push', 'no ar ✓', 'backup feito', 'deploy'] }
-  ];
-  var quantos = window.innerWidth < 700 ? 2 : 4;
-  var ops = [];
-  var seta = '<svg viewBox="0 0 20 20"><path d="M3 2 L17 9.5 L10.4 11.2 L7.4 17.5 Z" fill="COR" stroke="#0B1424" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+  // anotações: setas de fotomicrografia que apontam o que importa
+  var camada = document.getElementById('notas');
+  var cores = ['#2BC4AC', '#F3F6FA', '#FFC45C', '#E7A3C8'];
+  var maximo = window.innerWidth < 700 ? 1 : 2, vivas = 0, ultimo = null;
+  var usados = [];
 
-  for (var i = 0; i < quantos; i++){
-    var d = EQUIPE[i];
-    var el = document.createElement('div');
-    el.className = 'op';
-    el.style.setProperty('--cor', d.cor);
-    el.innerHTML = seta.replace('COR', d.cor) + '<span class="rotulo">' + d.falas[0] + '</span>';
-    camada.appendChild(el);
-    var op = { el: el, rot: el.querySelector('.rotulo'), d: d, x: 0, y: 0 };
-    var w = window.innerWidth, h = window.innerHeight;
-    op.x = w * (.15 + .7 * Math.random()); op.y = h * (.25 + .5 * Math.random());
-    el.style.transitionDuration = '0s';
-    el.style.transform = 'translate(' + op.x + 'px,' + op.y + 'px)';
-    ops.push(op);
-    setTimeout(trabalhar.bind(null, op), 600 + i * 700);
-  }
-
-  function alvosVisiveis(){
-    var h = window.innerHeight, w = window.innerWidth, lista = [];
-    document.querySelectorAll('[data-alvo]').forEach(function(el){
+  function visiveis(){
+    var h = window.innerHeight, w = window.innerWidth, l = [];
+    document.querySelectorAll('[data-nota]').forEach(function(el){
+      if (el === ultimo || usados.indexOf(el) >= 0) return;
       var r = el.getBoundingClientRect();
-      if (r.bottom > 70 && r.top < h - 30 && r.right > 0 && r.left < w && r.width > 20) lista.push({ el: el, r: r });
+      if (r.top > 90 && r.bottom < h - 20 && r.width > 30 && r.left >= 0 && r.right <= w) l.push({ el: el, r: r });
     });
-    return lista;
+    return l;
   }
 
-  function trabalhar(op){
-    if (document.hidden){ setTimeout(trabalhar.bind(null, op), 1500); return; }
-    var lista = alvosVisiveis();
-    var w = window.innerWidth, h = window.innerHeight, alvo = null, x, y;
-    if (lista.length){
-      alvo = lista[Math.floor(Math.random() * lista.length)];
-      var r = alvo.r;
-      x = r.left + r.width * (.2 + .6 * Math.random());
-      y = Math.max(80, r.top) + Math.min(r.height, h - Math.max(80, r.top)) * (.2 + .6 * Math.random());
+  function anotar(){
+    if (document.hidden || vivas >= maximo) return;
+    var l = visiveis(); if (!l.length) return;
+    var a = l[Math.floor(Math.random() * l.length)];
+    ultimo = a.el; usados.push(a.el);
+    var r = a.r, w = window.innerWidth, sy = window.scrollY, sx = window.scrollX;
+    // ponto que a seta toca: perto de um canto de cima da peça
+    var esquerda = (r.left + r.width / 2) > w / 2;
+    var px = esquerda ? r.left + Math.min(28, r.width * .2) : r.right - Math.min(28, r.width * .2);
+    var py = r.top + Math.min(24, r.height * .3);
+    var pt = a.el.getAttribute('data-ponto');
+    if (pt){ pt = pt.split(','); px = r.left + r.width * (esquerda ? +pt[0] : 1 - pt[0]); py = r.top + r.height * +pt[1]; }
+    // a seta vem de fora, de cima, na diagonal
+    var ang = esquerda ? -135 : -45;            // graus, de onde vem a cauda
+    var comp = 64;
+    var rad = ang * Math.PI / 180;
+    var tx = px + Math.cos(rad) * comp, ty = py + Math.sin(rad) * comp;
+    var cor = cores[Math.floor(Math.random() * cores.length)];
+    var tipo = Math.random() < .72 ? 'seta' : 'ponta';
+
+    var n = document.createElement('div');
+    n.className = 'nota';
+    n.style.setProperty('--cor', cor);
+    n.style.transform = 'translate(' + (px + sx) + 'px,' + (py + sy) + 'px)';
+    var dx = tx - px, dy = ty - py;
+    var giro = Math.atan2(-dy, -dx) * 180 / Math.PI; // direção da cauda para a ponta
+    var corpo;
+    if (tipo === 'seta'){
+      // seta cheia com contorno escuro, como em prancha de fotomicrografia
+      corpo = '<path d="M0 0 L-22 -11 L-17 -3.5 L-' + comp + ' -3.5 L-' + comp + ' 3.5 L-17 3.5 L-22 11 Z" fill="' + cor + '" stroke="#0B1424" stroke-width="1.6" stroke-linejoin="round"/>';
     } else {
-      x = w * (.1 + .8 * Math.random()); y = h * (.2 + .6 * Math.random());
+      // ponta de seta solta (arrowhead)
+      corpo = '<path d="M0 0 L-24 -12 L-18 0 L-24 12 Z" fill="' + cor + '" stroke="#0B1424" stroke-width="1.6" stroke-linejoin="round"/>';
     }
-    x = Math.max(8, Math.min(w - 150, x)); y = Math.max(76, Math.min(h - 40, y));
-    var dist = Math.hypot(x - op.x, y - op.y);
-    var dur = Math.min(2.4, Math.max(.7, dist / 520));
-    op.el.style.transitionDuration = dur + 's';
-    op.el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
-    op.x = x; op.y = y;
-    op.el.classList.remove('digita');
+    n.innerHTML = '<svg width="1" height="1" style="left:0;top:0"><g transform="rotate(' + giro + ')"><g class="haste" style="--ox:0px;--oy:0px">' + corpo + '</g></g></svg><span class="rot"></span>';
+    var rot = n.querySelector('.rot');
+    // rótulo na cauda da seta
+    var cauda = tipo === 'seta' ? comp : 26;
+    var cx = Math.cos(rad) * (cauda + 6), cy = Math.sin(rad) * (cauda + 6);
+    rot.style.left = (esquerda ? cx - 8 : cx + 8) + 'px';
+    rot.style.top = (cy - 24) + 'px';
+    if (esquerda) rot.style.transform = 'translateX(-100%)';
+    camada.appendChild(n);
+    vivas++;
+    // o rótulo nunca sai da tela
+    rot.textContent = a.el.getAttribute('data-nota');
+    var rr = rot.getBoundingClientRect(), ajuste = 0;
+    if (rr.left < 8) ajuste = 8 - rr.left;
+    if (rr.right > w - 8) ajuste = (w - 8) - rr.right;
+    if (ajuste) rot.style.left = (parseFloat(rot.style.left) + ajuste) + 'px';
+    rot.textContent = '';
+    requestAnimationFrame(function(){ n.classList.add('on'); });
+
+    var texto = a.el.getAttribute('data-nota'), k = 0;
+    (function digita(){
+      rot.textContent = texto.slice(0, ++k);
+      if (k < texto.length) setTimeout(digita, 38); else n.classList.add('pronta');
+    })();
+    a.el.style.transition = 'box-shadow .3s';
+    a.el.style.boxShadow = '0 0 0 1.5px ' + cor + '88';
     setTimeout(function(){
-      var fala = op.d.falas[Math.floor(Math.random() * op.d.falas.length)];
-      op.rot.textContent = fala;
-      if (Math.random() < .45){
-        op.el.classList.add('digita');
-      } else {
-        var o = document.createElement('div');
-        o.className = 'onda';
-        o.style.setProperty('--cor', op.d.cor);
-        o.style.left = (x + 4) + 'px'; o.style.top = (y + 3) + 'px';
-        camada.appendChild(o);
-        setTimeout(function(){ o.remove(); }, 800);
-      }
-      if (alvo){
-        alvo.el.classList.add('tocado');
-        setTimeout(function(){ alvo.el.classList.remove('tocado'); }, 900);
-      }
-      setTimeout(trabalhar.bind(null, op), 900 + Math.random() * 1600);
-    }, dur * 1000 + 60);
+      n.classList.remove('on'); a.el.style.boxShadow = '';
+      setTimeout(function(){ n.remove(); vivas--; }, 400);
+      setTimeout(function(){ var i = usados.indexOf(a.el); if (i >= 0) usados.splice(i, 1); }, 6000);
+    }, 2600 + texto.length * 38);
   }
+  setTimeout(anotar, 900);
+  setInterval(anotar, 1700);
 })();
 </script>
 </body>
