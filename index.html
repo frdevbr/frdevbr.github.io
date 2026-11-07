@@ -219,6 +219,26 @@ section{padding-block:96px}
 .tela.mini .progresso{left:8px;bottom:8px;font-size:10.5px;padding:5px 7px}
 @media (max-width:900px){.tela.mini{left:0;width:56%}.midia--micro{padding-bottom:56px}}
 
+
+/* portal dos residentes: painel de diferenciais desenhado em HTML (exemplo ilustrativo) */
+.dif{display:grid;grid-template-columns:1fr 1.15fr;gap:0;background:#F6F7FB;color:#0F1A2C;font-family:var(--f-texto)}
+.dif .ent{padding:16px;border-right:1px solid #DCE1EC;display:flex;flex-direction:column;gap:10px;min-width:0}
+.dif .rot{font:600 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:#5B6880}
+.dif .caixa{background:#fff;border:1px solid #D3D9E6;border-radius:8px;padding:10px 11px;font-size:13px;line-height:1.5;color:#1E2B42;min-height:86px}
+.dif .caixa mark{background:rgba(43,196,172,.25);color:inherit;border-radius:3px;padding:0 2px}
+.dif .ctx{display:flex;flex-wrap:wrap;gap:6px}
+.dif .ctx span{font:500 11px/1 var(--f-mono);background:#E7EBF3;border-radius:5px;padding:5px 7px;color:#33415A}
+.dif .res{padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.dif .it{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;background:#fff;border:1px solid #DCE1EC;border-radius:8px;padding:9px 10px}
+.dif .it b{font:700 12px/1 var(--f-mono);color:#fff;background:#0F1A2C;border-radius:5px;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.dif .it:first-of-type{border-color:#2BC4AC;box-shadow:0 0 0 1px #2BC4AC}
+.dif .it:first-of-type b{background:#10897A}
+.dif .it strong{display:block;font-size:13px;line-height:1.25}
+.dif .it small{display:block;font-size:11px;color:#5B6880;margin-top:2px}
+.dif .medidor{width:62px;height:6px;border-radius:3px;background:#E1E6EF;overflow:hidden}
+.dif .medidor i{display:block;height:100%;background:#10897A}
+@media (max-width:560px){.dif{grid-template-columns:1fr}.dif .ent{border-right:0;border-bottom:1px solid #DCE1EC}}
+
 /* serviços */
 .servicos{background:var(--navy);border-block:1px solid var(--linha)}
 .matriz{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden}
@@ -352,7 +372,7 @@ section{padding-block:96px}
     </div>
     <div class="wrap">
       <div class="numeros">
-        <div data-alvo data-nota="no ar ou em teste"><b>7</b><span>sistemas no ar ou em teste</span></div>
+        <div data-alvo data-nota="no ar ou em teste"><b>8</b><span>sistemas no ar ou em teste</span></div>
         <div data-alvo data-nota="390 · 820 · 1280 px"><b>3 telas</b><span>celular, tablet e computador conferidos em cada entrega</span></div>
         <div data-alvo data-nota="planos grátis"><b>R$ 0</b><span>de mensalidade de software nos sistemas entregues</span></div>
         <div data-alvo data-nota="dados protegidos"><b>LGPD</b><span>login, permissões e dados protegidos desde o início</span></div>
@@ -437,6 +457,39 @@ section{padding-block:96px}
             <div><dt>Evolução</dt><dd>As lâminas do acervo viram material de aula e base para telepatologia. Próximo passo: <b>contagem de núcleos e mitoses</b> na área padrão, com o patologista confirmando cada uma.</dd></div>
           </dl>
           <p class="mono" style="color:var(--apagado)">Tudo roda no computador do laboratório: nenhuma imagem de paciente sai de lá.</p>
+        </div>
+      </article>
+
+      <article class="caso">
+        <div class="midia" style="padding-right:0;padding-bottom:0">
+          <figure class="tela" data-alvo data-nota="diferenciais enquanto digita">
+            <div class="barra"><i></i><i></i><i></i><span>Portal dos Residentes · Diferenciais</span></div>
+            <div class="dif" role="img" aria-label="Exemplo da aba Diferenciais: a residente descreve congestão do encéfalo em bovino e o portal ordena os diagnósticos diferenciais">
+              <div class="ent">
+                <span class="rot">Macroscopia</span>
+                <div class="caixa"><mark>Congestão acentuada do encéfalo</mark> e de <mark>vasos das meninges</mark>. Córtex com coloração rosa-cereja.</div>
+                <div class="ctx"><span>bovino</span><span>encéfalo</span><span>N · necropsia</span></div>
+                <span class="rot" style="margin-top:2px">exemplo ilustrativo</span>
+              </div>
+              <div class="res">
+                <span class="rot">Diferenciais · 657 doenças na base</span>
+                <div class="it"><b>1</b><div><strong>Babesiose cerebral</strong><small>bate com: congestão do encéfalo, rosa-cereja</small></div><span class="medidor"><i style="width:78%"></i></span></div>
+                <div class="it"><b>2</b><div><strong>Polioencefalomalácia</strong><small>falta conferir: malácia cortical</small></div><span class="medidor"><i style="width:34%"></i></span></div>
+                <div class="it"><b>3</b><div><strong>Raiva</strong><small>falta conferir: corpúsculos de inclusão</small></div><span class="medidor"><i style="width:22%"></i></span></div>
+              </div>
+            </div>
+          </figure>
+        </div>
+        <div class="info">
+          <div class="protocolo"><b>P09-26</b><span class="status">● Em uso pelas residentes</span></div>
+          <h4>Portal dos Residentes do LPPV-UnB</h4>
+          <dl class="laudo">
+            <div><dt>Queixa</dt><dd>No Laboratório de Patologia e Perícia Veterinária da UnB, cada caso pedia pasta no Drive, laudo no modelo oficial e controle de prazo, tudo à mão.</dd></div>
+            <div><dt>Conduta</dt><dd>Portal com login próprio: cada entrada de <b>biópsia, citologia ou necropsia</b> cria a pasta no Drive, gera o <b>laudo em Word</b> no modelo oficial já preenchido e registra o caso. Painel de prazos, busca instantânea e etiqueta para o frasco.</dd></div>
+            <div><dt>Evolução</dt><dd>Aba <b>Diferenciais</b>: a residente descreve o que vê e o portal ordena as hipóteses numa base de <b>657 doenças</b> de 17 sistemas, com o que bate, o que fala contra e o que falta conferir.</dd></div>
+          </dl>
+          <p class="mono" style="color:var(--apagado)">Apoio ao raciocínio: a conclusão é sempre do patologista. Roda no navegador, sem enviar nada para fora.</p>
+          <div class="chips"><span>Apps Script</span><span>Google Drive</span><span>Word automático</span><span>motor de diferenciais</span></div>
         </div>
       </article>
 
