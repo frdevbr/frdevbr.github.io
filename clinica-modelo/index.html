@@ -69,7 +69,7 @@ header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--fundo
 .menu{display:flex;gap:26px;list-style:none;font-weight:600;font-size:15px}
 .menu a{text-decoration:none;color:var(--tinta2)}
 .menu a:hover{color:var(--cor)}
-.nav .longo{margin-left:.3em}
+.nav .btn{gap:0}.nav .longo{margin-left:.3em}
 @media (max-width:600px){.nav .longo{display:none}.logo{font-size:20px}}
 @media (max-width:900px){.menu{display:none}.nav .btn{padding:12px 16px;font-size:14px}}
 
@@ -424,6 +424,27 @@ function aplicar(t){
 }
 document.querySelectorAll('.estilos button').forEach(b=>b.addEventListener('click',()=>aplicar(b.dataset.t)));
 try{const s=localStorage.getItem('vetdev-tema');if(s&&cores[s])aplicar(s)}catch(e){}
+
+// ---------- prévia personalizada: ?nome=Clínica%20X&cor=%23RRGGBB ----------
+(function(){
+  const q=new URLSearchParams(location.search);
+  const nome=(q.get('nome')||'').trim().slice(0,40), cor=(q.get('cor')||'').trim();
+  if(nome){
+    const partes=nome.split(' '), ult=partes.pop();
+    const el=document.querySelector('.logo > span:last-child');
+    el.textContent=partes.join(' ')+(partes.length?' ':'');const b=document.createElement('b');b.textContent=ult;el.appendChild(b);
+    document.title=nome+' · prévia do site pela FR Dev';
+    document.querySelectorAll('.demo').forEach(d=>d.firstChild.textContent=`Prévia do site · ${nome} · feita pela FR Dev. `);
+  }
+  if(/^#[0-9a-fA-F]{6}$/.test(cor)){
+    const r=document.documentElement.style;
+    r.setProperty('--cor',cor);
+    r.setProperty('--cor2',`color-mix(in srgb, ${cor} 78%, white)`);
+    r.setProperty('--clara',`color-mix(in srgb, ${cor} 12%, white)`);
+    cores.classico=cores.moderno=cores.acolhedor=cor;
+    document.querySelector('meta[name="theme-color"]').content=cor;
+  }
+})();
 
 // ---------- horários e "aberto agora" (hora de Fortaleza) ----------
 const HORARIO=[null,[8,20],[8,20],[8,20],[8,20],[8,20],[8,14]]; // dom..sáb
